@@ -259,7 +259,7 @@ def conflict():
     global plan
     global countrys
     global country
-    while war == '':
+    if war == '':
         print(f'you are at war with {at_war_with}!!!!!')
         stability -= 2
         army += 500
@@ -339,7 +339,7 @@ def battle():
         money -= (countrys[at_war_with] * 1000) - (stability * 200)
         print('you have a battle, and you lose some of your army, and some stability, but your people stay happy, and you keep your money')
     elif plan == 'd':
-        print(f'{countrys[at_war_with]} marches onto your turf, you meet them at {citys[random.randint(0,len(citys)-1)]}')
+        print(f'{at_war_with} marches onto your turf, you meet them at {citys[random.randint(0,len(citys)-1)]}')
         countrys[at_war_with] -= random.randint(1,2) + army/8000
         popsat -= countrys[at_war_with] - stability / 10
         money -= (countrys[at_war_with] * 2500) - (stability * 350)
