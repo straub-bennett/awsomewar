@@ -259,7 +259,7 @@ def conflict():
     global plan
     global countrys
     global country
-    if war == '':
+    while war == '':
         print(f'you are at war with {at_war_with}!!!!!')
         stability -= 2
         army += 500
@@ -316,7 +316,7 @@ def loss():
         print('ending game')
         sys.exit()
     
-#finished
+#unfinished
 def battle():
     global stability
     global popsat
@@ -339,7 +339,7 @@ def battle():
         money -= (countrys[at_war_with] * 1000) - (stability * 200)
         print('you have a battle, and you lose some of your army, and some stability, but your people stay happy, and you keep your money')
     elif plan == 'd':
-        print(f'{at_war_with} marches onto your turf, you meet them at {citys[random.randint(0,len(citys)-1)]}')
+        print(f'{countrys[at_war_with]} marches onto your turf, you meet them at {citys[random.randint(0,len(citys)-1)]}')
         countrys[at_war_with] -= random.randint(1,2) + army/8000
         popsat -= countrys[at_war_with] - stability / 10
         money -= (countrys[at_war_with] * 2500) - (stability * 350)
@@ -364,8 +364,7 @@ def win():
         print('you won, and, wow, the game actually works jeez, anyways, congrats you did it, you have become the hegimon of the world and are now seen as the greatest power ever!')
         time.sleep(8)
         print('why are you still here')
-        time.sleep(2)
-        sys.exit()
+        time.sleep(5)
 
 
 def main():
