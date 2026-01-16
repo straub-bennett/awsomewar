@@ -28,7 +28,7 @@ countrys = {'Austria':4,
             'Switzerland':1.0,
             'Italy':3.0,
             'Ottoman Empire':6.0,
-            'Spain':4.0, 'none': 20}
+            'Spain':4.0, 'Final Boss': 100}
 random_country = list(countrys.keys())
 user_input = input('would you like to play war? (yes/no): ')
 if user_input == 'yes':
@@ -117,9 +117,8 @@ def random_event():
     global plan
     global countrys
     global country
-    chance = random.randint(1,6)
-    if chance >=3:
-        random_events = random.randint(0, 5)
+
+    random_events = random.randint(0, 5)
     if round(random_events + stability / 20) == 1:
         print('random event: a famine has struck your country, you lose 5 stability and your people have become unhappy')
         stability = stability - 5
@@ -173,7 +172,7 @@ def random_event():
         money = money + 6000
         army = army + 500
     elif round(random_events + stability / 20) == 8:
-        R_E8 = input(f'a professional mercinary company from{random_country[random.randint(0,len(random_country))]} offers to join you for a small fee, do you accept(y/n) ')
+        R_E8 = input(f'a professional mercinary company from{random_country[random.randint(0,len(random_country)-1)]} offers to join you for a small fee, do you accept(y/n) ')
         if R_E8 == 'y':
             money = money - 4000
             army = army + 6000
@@ -234,7 +233,7 @@ def year():
         money = money - 5000
         print('you invest in new city walls!')
     elif choice == 'war':
-        at_war_with = input(f'who would you like to go to war with, the options are {random_country}')
+        at_war_with = input(f'who would you like to go to war with, the options are {random_country}').title()
         print(f'you are now at war with {at_war_with}')
         war = ''
         money = money + 3000
@@ -261,10 +260,6 @@ def conflict():
     global country
     while war == '':
         print(f'you are at war with {at_war_with}!!!!!')
-        stability -= 2
-        army += 500
-        money -= 1000
-        popsat -= 1
         plan = input('do you want to go on the defence, or offence? (d/o)')
         if plan == 'd':
             stability += 4
@@ -275,7 +270,7 @@ def conflict():
 
         if plan == 'o':
             stability -= 2
-            army += 2000
+            army += 1000
             money -= 1000
             print('your army gears up for battle. Good luck.')
         battle()
@@ -297,20 +292,20 @@ def loss():
     if stability <= 0:
         money -= 10000
         popsat -= 3
-        stability += 1
+        stability = 1
         print('you have lost all stability and your people lose trust in your government, raise it now.')
     if popsat <= 0:
         money -= 8000
         stability -= 4
-        popsat += 1
+        popsat = 1
         print('your population is extremly unhappy, and you have to lower taxes, ')
     if money <= 0:
         popsat -= 3
         stability -= 5
         army = 1000
-        money += 1
+        money = 1
         print('your country goes bankrupt, almost all your soliders quit, and your population is extremly unhappy')
-    if money <= 0 and army <= 0 and stability <=0 and popsat<= 5:
+    if money <= 0 and army <= 10000 and stability <=0 and popsat<= 8:
         print('your country despretly tries to struggle back to great power status, however your people revolt into open civil war, and your neighbors take the oppertunity to assult you, your country is no more. Try again? ')
         time.sleep(5)
         print('ending game')
@@ -329,23 +324,57 @@ def battle():
     global plan
     global countrys
     global country
+    global Enemy
     print(f'battle starting with {at_war_with}')
-    if plan == 'o':
-        print(f'you invade {at_war_with}, and they meet you at the battlefield')
-        countrys[at_war_with] += 1
-        countrys[at_war_with] -= random.randint(0,3) + army/11000
-        army -= countrys[at_war_with] * 1200
-        stability -= ((countrys[at_war_with] * 5000) - army)/1000
-        money -= (countrys[at_war_with] * 1000) - (stability * 200)
-        print('you have a battle, and you lose some of your army, and some stability, but your people stay happy, and you keep your money')
-    elif plan == 'd':
-        print(f'{countrys[at_war_with]} marches onto your turf, you meet them at {citys[random.randint(0,len(citys)-1)]}')
-        countrys[at_war_with] -= random.randint(1,2) + army/8000
-        popsat -= countrys[at_war_with] - stability / 10
-        money -= (countrys[at_war_with] * 2500) - (stability * 350)
-        army -= countrys[at_war_with] * 900
-        print(f'you have a massive battle on your turf and must pay for damages, but their army is damaged {at_war_with} now has {countrys[at_war_with]}strength left')
+    attack = random.randint(0,3)
+    if attack > 1:
+        if plan == 'o':
+            print(f'you invade {at_war_with}, and they meet you at the battlefield')
+            countrys[at_war_with] += 1
+            countrys[at_war_with] -= round(random.randint(1,4) + army/10000)
+            army -= round(countrys[at_war_with] * 1200)
+            stability -= round(((countrys[at_war_with] * 5000) - army)/1000)
+            money -= round((countrys[at_war_with] * 1000) - (stability * 200))
+            print(f'you have a battle, and you lose some of your army, and some stability, but your people stay happy, and you keep your money, they have{countrys[at_war_with]}')
+        elif plan == 'd':
+            print(f'{countrys[at_war_with]} marches onto your turf, you meet them at {citys[random.randint(0,len(citys)-1)]}')
+            countrys[at_war_with] -= round(random.randint(0,2) + army/7500)
+            popsat -= round(countrys[at_war_with] - stability / 13)
+            money -= round((countrys[at_war_with] * 2800) - (stability * 300))
+            army -= round(countrys[at_war_with] * 950)
+            
+            print(f'you have a massive battle on your turf and must pay for damages, but their army is damaged {at_war_with} now has {countrys[at_war_with]}strength left')
+    if countrys[Enemy] <= 0:
+        del countrys[Enemy]
+        money += 5000
+        Enemy = 'Final Boss'
+        popsat += 1
+        stability += 10
+        army += 2000
+        print('you takeover a neighboring country, and gain many benifits')
+        at_war_with = 'Final Boss'
+        countrys['Final Boss'] = 25
+        war = 'not'
+        print('after taking out your rival, a coalition forms against you, and you must defeat them to win.')
+        random_country = list(countrys.keys())
+    elif countrys[at_war_with] <= 0:
+        del countrys[at_war_with]
+        money += 5000
+        popsat += 1
+        stability += 10
+        army += 2000
+        print('you takeover a neighboring country, and gain many benifits')
+        at_war_with = 'Final Boss'
+        war = 'not'
+        random_country = list(countrys.keys())
+    if army <= 0:
+        money -= 7000
+        popsat-= 2
+        stability -= 7
+        army += 10000
+        print('you run out of soliders, and you must recruit more to fund your battles')
 
+    
 
 def win():
     global stability
@@ -360,12 +389,13 @@ def win():
     global countrys
     global country
     random_country = list(countrys.keys())
-    if len(random_country) == 0:
+    if len(random_country) <= 2:
         print('you won, and, wow, the game actually works jeez, anyways, congrats you did it, you have become the hegimon of the world and are now seen as the greatest power ever!')
         time.sleep(8)
         print('why are you still here')
         time.sleep(5)
-
+    if countrys['final Boss'] <= 0:
+        print('you winnnn! you have beaten the coalition that has formed against you!')
 
 def main():
     """
@@ -397,15 +427,7 @@ def main():
         print('a random country has developed')
         countrys[random_country[random.randint(0,len(random_country)-1)]] -= 2
         print('a war has lead a random country to lose development')
-        if countrys[at_war_with] <= 0:
-            countrys.remove([countrys[at_war_with]])
-            money += 10000
-            popsat += 2
-            stability += 10
-            army += 5000
-            print('you takeover a neighboring country, and gain many benifits')
-            at_war_with = ''
-            war = 'not'
+
 
         
 
